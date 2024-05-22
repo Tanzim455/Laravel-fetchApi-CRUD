@@ -13,7 +13,7 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products=Product::select('title','description')->get();
+        $products=Product::select('id','title','description')->get();
         
         return response()->json($products);
     }
