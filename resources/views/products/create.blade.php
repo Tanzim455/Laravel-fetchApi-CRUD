@@ -29,7 +29,7 @@
 </form>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+   
         const form = document.querySelector('.form');
         const title = document.querySelector('.title');
         const description = document.querySelector('.description');
@@ -72,7 +72,7 @@
 //                      title: title.value,
 //                      description: description.value
 //                 })
-                axios.post('http://127.0.0.1:8000/products', {
+    axios.post('http://127.0.0.1:8000/products', {
     title:title.value,
     description:description.value
   })
@@ -85,10 +85,24 @@
     }
   })
   .catch(function (error) {
-    console.log();
-     errortitlemessage.textContent=`${error.response.data.errors.title[1]}`
-    errordescriptionmessage.textContent=`${error.response.data.errors.description[1]}`
-    errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+    if(error.response.data.errors.title){
+        errortitlemessage.textContent=`${error.response.data.errors.title[1]}`
+        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+    }
+    if(error.response.data.errors.description){
+        errordescriptionmessage.textContent=`${error.response.data.errors.description[1]}`
+        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+    }
+    if(error.response.data.errors.title && error.response.data.errors.description)
+    {
+        errortitlemessage.textContent=`${error.response.data.errors.title[1]}`
+        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+        errordescriptionmessage.textContent=`${error.response.data.errors.description[1]}`
+        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+    }
+     
+   
+   
   });
         // axios.post('http://127.0.0.1:8000/products',formObj)
         // .then(data=>console.log(data))
@@ -99,7 +113,7 @@
 
            
          })
-        })
+        
 </script>
 </body>
 </html>
