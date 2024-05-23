@@ -12,6 +12,7 @@
     
 <form class="form max-w-sm mx-auto">
     @csrf
+    <div class="successmessage"></div>
     <div class="mb-5">
         <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
         <input type="text" name="title" class="title bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
@@ -30,7 +31,8 @@
         const title = document.querySelector('.title');
         const description = document.querySelector('.description');
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
+        const successmessage=document.querySelector('.successmessage');
+       
         form.addEventListener('submit', (e) => {
             e.preventDefault(); // Prevent the default form submission
 
@@ -45,8 +47,17 @@
                     'X-CSRF-TOKEN': csrfToken
                 },
                
-            }).then((response) => response.json())
-  .then((json) => console.log(json));
+            }).then((response) =>{
+                if(response.status===200){
+                  return response.json();
+                }
+            })
+  .then((json) =>{
+        successmessage.textContent=`${json.message}`
+        successmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-green-50', 'dark:bg-gray-800', 'dark:text-green-400');
+
+        
+  });
 
            description.value='';
            title.value='';
