@@ -89,15 +89,19 @@ form.addEventListener('submit',  (e) => {
       
       
     }
-  }).catch(error=>{
-    console.log(error);
+    if(message.status===200){
+      successmessage.textContent=`${message.message}`;
+      successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
+      
+    }
   })
+    })
     
 
   // Clear input fields
   title.value = '';
   description.value = '';
-});
+
 
     //  axios.post('http://127.0.0.1:8000/products').then(data=>{
         //     console.log(data);

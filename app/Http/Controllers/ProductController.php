@@ -47,6 +47,11 @@ class ProductController extends Controller
         // return $product;
     }
 
+         
+       
+        // return $product;
+    
+
     /**
      * Display the specified resource.
      */
