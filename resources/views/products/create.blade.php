@@ -68,7 +68,29 @@ form.addEventListener('submit',  (e) => {
   response.then(data=>{
     return data.json();
   }).then(message=>{
-    console.log(message);
+    // console.log(message);
+    if(message.status===400){
+      console.log(message.errors);
+      if(message.errors.title){
+        errortitlemessage.textContent=`${message.errors.title[1]}`
+        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+      }
+      if(message.errors.description){
+        errordescriptionmessage.textContent=`${message.errors.description[1]}`
+        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+       
+      }
+      if(message.errors.title && message.errors.description){
+        errortitlemessage.textContent=`${message.errors.title[1]}`
+        errordescriptionmessage.textContent=`${message.errors.description[1]}`
+        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+      }
+      
+      
+    }
+  }).catch(error=>{
+    console.log(error);
   })
     
 
