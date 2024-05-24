@@ -18,7 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
  Route::resource('products',ProductController::class);
-
+ Route::post('products/store',[ProductController::class,'store'])->name('productsstore');
  Route::get('viewall',function(){
      return view('products.viewall');
  });

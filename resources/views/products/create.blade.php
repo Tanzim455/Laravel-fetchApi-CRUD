@@ -1,5 +1,5 @@
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +11,8 @@
 </head>
 <body>
     
-<form class="form max-w-sm mx-auto">
-    @csrf
+<form   class="form max-w-sm mx-auto">
+    
     <div class="successmessage"></div>
     <div class="mb-5">
         <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
@@ -25,95 +25,61 @@
         <div class="errordescriptionmessage"></div>
     </div>
     
-    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+    <button  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
 </form>
 
 <script>
-   
-        const form = document.querySelector('.form');
-        const title = document.querySelector('.title');
-        const description = document.querySelector('.description');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const successmessage=document.querySelector('.successmessage');
-        const titlemessage=document.querySelector('.titlemessage');
-        const errortitlemessage=document.querySelector('.errortitlemessage');
-        const errordescriptionmessage=document.querySelector('.errordescriptionmessage');
-        form.addEventListener('submit', (e) => {
-             e.preventDefault(); // Prevent the default form submission
-
-//             fetch('http://127.0.0.1:8000/products', {
-//                 method: 'POST',
-//                 body: JSON.stringify({
-//                     title: title.value,
-//                     description: description.value
-//                 }),
-//                 headers: {
-//                     'Content-type': 'application/json',
-//                     'X-CSRF-TOKEN': csrfToken
-//                 },
-               
-//             }).then((response) =>{
-//                 console.log(response.status);
-//                 // if(response.status===200){
-//                 //   return response.json();
-//                 // }
-//                 // if(response.status===422)
-//                 // {
-//                 //     console.log("422 error");
-//                 // }
-//             })
-//   .then((json) =>{
-//         successmessage.textContent=`${json.message}`
-//         successmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-green-50', 'dark:bg-gray-800', 'dark:text-green-400');
-
-        
-//   })
-// let formObj=JSON.stringify({
-//                      title: title.value,
-//                      description: description.value
-//                 })
-    axios.post('http://127.0.0.1:8000/products', {
-    title:title.value,
-    description:description.value
-  })
-  .then(function (response) {
+    const form = document.querySelector('.form');
+    const title = document.querySelector('.title');
+    const description = document.querySelector('.description');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const successmessage = document.querySelector('.successmessage');
+    const errortitlemessage = document.querySelector('.errortitlemessage');
+    const errordescriptionmessage = document.querySelector('.errordescriptionmessage');
     
-    if(response.status===200){
-        console.log(response);
-        successmessage.textContent=`${response.data.message}`
-        successmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-green-50', 'dark:bg-gray-800', 'dark:text-green-400');
-    }
+   // Assuming you have an HTML form with input fields for title and description
+// const form = document.querySelector('#your-form-id'); // Replace with your actual form ID
+
+form.addEventListener('submit',  (e) => {
+  e.preventDefault();
+
+  // Validate input fields
+ // Replace with actual input ID
+ 
+//   const descriptionInput = document.querySelector('#description-input'); // Replace with actual input ID
+
+  
+
+  // Get the CSRF token (assuming it's in a meta tag)
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  
+    const response = fetch('http://127.0.0.1:8000/products/store', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        'X-CSRF-TOKEN': csrfToken,
+      },
+      body: JSON.stringify({
+        title: title.value,
+        description: description.value,
+      }),
+    });
+  response.then(data=>{
+    return data.json();
+  }).then(message=>{
+    console.log(message);
   })
-  .catch(function (error) {
-    if(error.response.data.errors.title){
-        errortitlemessage.textContent=`${error.response.data.errors.title[1]}`
-        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-    }
-    if(error.response.data.errors.description){
-        errordescriptionmessage.textContent=`${error.response.data.errors.description[1]}`
-        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-    }
-    if(error.response.data.errors.title && error.response.data.errors.description)
-    {
-        errortitlemessage.textContent=`${error.response.data.errors.title[1]}`
-        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-        errordescriptionmessage.textContent=`${error.response.data.errors.description[1]}`
-        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-    }
-     
-   
-   
-  });
-        // axios.post('http://127.0.0.1:8000/products',formObj)
-        // .then(data=>console.log(data))
-            description.value='';
-            title.value='';
+    
 
+  // Clear input fields
+  title.value = '';
+  description.value = '';
+});
 
-
-           
-         })
-        
+    //  axios.post('http://127.0.0.1:8000/products').then(data=>{
+        //     console.log(data);
+        //  })
 </script>
 </body>
 </html>

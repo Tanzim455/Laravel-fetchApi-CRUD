@@ -27,4 +27,13 @@ class ProductRequest extends FormRequest
              'description'=>'string|required'
         ];
     }
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        $response = response()->json([
+            'status' => 400,
+            'errors' => $validator->messages()
+        ]);
+
+        throw new \Illuminate\Validation\ValidationException($validator, $response);
+    }
 }
