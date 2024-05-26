@@ -51,5 +51,5 @@ $kernel = $app->make(Kernel::class);
 $response = $kernel->handle(
     $request = Request::capture()
 )->send();
-
+// dd($response);
 $kernel->terminate($request, $response);

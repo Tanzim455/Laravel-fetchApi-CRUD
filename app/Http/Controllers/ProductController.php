@@ -12,7 +12,7 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index():JsonResponse
     {
         //
         $products=Product::select('id','title','description')->get();
@@ -55,9 +55,13 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id):JsonResponse
     {
         //
+        $product=Product::findOrFail($id);
+        
+        return response()->json($product);
+
     }
 
     /**
@@ -82,5 +86,18 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         //
+        $product=Product::findOrFail($id);
+        if($product){
+            $product->delete();
+            return response()->json([
+                'status'=>200,
+                'message'=>'Student Deleted Successfully.'
+            ]);
+        }else{
+            return response()->json([
+                'status'=>404,
+                'message'=>'Student not found'
+            ]);
+        }
     }
 }
