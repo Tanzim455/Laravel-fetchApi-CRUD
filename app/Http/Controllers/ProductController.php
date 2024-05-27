@@ -6,6 +6,7 @@ use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class ProductController extends Controller
 {
@@ -70,20 +71,38 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         //
+        $product=Product::findOrFail($id);
+        // dd($product);
+         return view('products.edit',compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request,string $id):JsonResponse
     {
         //
+        $product=Product::findOrFail($id);
+        if($product){
+            $product->title=$request->input('title');
+            $product->description=$request->input('description');
+            $product->update();
+            return response()->json([
+                'status'=>200,
+                'message'=>'Student Data updated Successfully.'
+            ]);
+        }else{
+            return response()->json([
+                'status'=>404,
+                'message'=>'Student not found'
+            ]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id):JsonResponse
     {
         //
         $product=Product::findOrFail($id);

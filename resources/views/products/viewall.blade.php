@@ -28,10 +28,12 @@
                 <th scope="col" class="px-6 py-3">
                     Delete
                  </th>
+                 
             </tr>
         </thead>
         <tbody>
             <!-- Rows will be dynamically added here -->
+           
         </tbody>
     <script>
 //    
@@ -51,7 +53,9 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
          let tr=document.createElement('tr');
          let td=document.createElement('td');
          let button=document.createElement('button');
+         let editBtn=document.createElement('button');
          button.textContent='Delete';
+          editBtn.textContent='Edit';
          td.textContent=`${d.id}`;
          td.classList.add('px-6', 'py-4')
          let td2=document.createElement('td');
@@ -61,6 +65,9 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
           td3.textContent=`${d.description}`;
           td3.classList.add('px-6', 'py-4')
           button.classList.add('dlt-button','focus:outline-none','text-white','bg-red-700','hover:bg-red-800','focus:ring-4', 'focus:ring-red-300','font-medium','rounded-lg','text-sm','px-5','py-2.5','me-2','mb-2','dark:bg-red-600', 'dark:hover:bg-red-700','dark:focus:ring-red-900')
+          editBtn.classList.add('edit-btn', 'text-gray-900', 'bg-white', 'border', 'border-gray-300', 'focus:outline-none', 'hover:bg-gray-100', 'focus:ring-4', 'focus:ring-gray-100', 'font-medium', 'rounded-lg', 'text-sm', 'px-5', 'py-2.5', 'me-2', 'mb-2', 'dark:bg-gray-800', 'dark:text-white', 'dark:border-gray-600', 'dark:hover:bg-gray-700', 'dark:hover:border-gray-600', 'dark:focus:ring-gray-700');
+
+
           button.addEventListener('click',(e)=>{
                e.preventDefault();
                fetch(`http://127.0.0.1:8000/products/${d.id}`,{
@@ -80,10 +87,22 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
            
             
           })
+          editBtn.addEventListener('click',(e)=>{
+            e.preventDefault();
+            let singleProduct= fetch(`http://127.0.0.1:8000/products/${d.id}`)
+
+            singleProduct.then(res=>{
+                return res.json()
+            }).then(data=>{
+                window.location.href=`http://127.0.0.1:8000/products/${d.id}/edit`
+            })
+            
+          })
          tr.appendChild(td)
          tr.appendChild(td2)
          tr.appendChild(td3)
          tr.appendChild(button)
+         tr.appendChild(editBtn)
          tbody.appendChild(tr)
 
     });
