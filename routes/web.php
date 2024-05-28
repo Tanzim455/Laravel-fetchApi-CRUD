@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[ProductController::class,'allproducts']);
  Route::resource('products',ProductController::class);
  Route::post('products/store',[ProductController::class,'store'])->name('productsstore');
  Route::get('viewall',function(){
      return view('products.viewall');
  });
+
+ Route::post('/addToCart',[CartController::class,'addToCart'])->name('addToCart');

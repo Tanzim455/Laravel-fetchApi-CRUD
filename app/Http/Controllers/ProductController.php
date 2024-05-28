@@ -3,16 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
+use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
+
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    public function allproducts():View{
+        $carts=Cart::join('products','carts.product_id','products.id')->get();
+         $cartLength=Cart::count();
+        $products=Product::select('id','title','description','price')->get();
+        return view('welcome',compact('products','carts','cartLength'));
+    }
     public function index():JsonResponse
     {
         //

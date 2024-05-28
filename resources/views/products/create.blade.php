@@ -24,6 +24,11 @@
         <input type="text" name="description" class="description bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
         <div class="errordescriptionmessage"></div>
     </div>
+    <div class="mb-5">
+      <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+      <input type="number" name="price" class="price bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      <div class="errorpricemessage"></div>
+  </div>
     
     <button  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
 </form>
@@ -32,10 +37,12 @@
     const form = document.querySelector('.form');
     const title = document.querySelector('.title');
     const description = document.querySelector('.description');
+    const price = document.querySelector('.price');
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const successmessage = document.querySelector('.successmessage');
     const errortitlemessage = document.querySelector('.errortitlemessage');
     const errordescriptionmessage = document.querySelector('.errordescriptionmessage');
+    const errorpricemessage=document.querySelector('.errorpricemessage');
     
    // Assuming you have an HTML form with input fields for title and description
 // const form = document.querySelector('#your-form-id'); // Replace with your actual form ID
@@ -43,14 +50,7 @@
 form.addEventListener('submit',  async (e) => {
   e.preventDefault();
 
-  // Validate input fields
- // Replace with actual input ID
  
-//   const descriptionInput = document.querySelector('#description-input'); // Replace with actual input ID
-
-  
-
-  // Get the CSRF token (assuming it's in a meta tag)
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
   
@@ -63,17 +63,23 @@ form.addEventListener('submit',  async (e) => {
       body: JSON.stringify({
         title: title.value,
         description: description.value,
+        price:price.value
       }),
     });
   
     let message=await response.json();
   
-    // console.log(message);
+     
     if(message.status===400){
-      console.log(message.errors);
+      
+      console.log(message.errors.price[0]);
       if(message.errors.title){
         errortitlemessage.textContent=`${message.errors.title[1]}`
         errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+      }
+      if(message.errors.price){
+        errorpricemessage.textContent=`${message.errors.price[0]}`
+        errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
       }
       if(message.errors.description){
         errordescriptionmessage.textContent=`${message.errors.description[1]}`
@@ -83,11 +89,15 @@ form.addEventListener('submit',  async (e) => {
       if(message.errors.title && message.errors.description){
         errortitlemessage.textContent=`${message.errors.title[1]}`
         errordescriptionmessage.textContent=`${message.errors.description[1]}`
+         errorpricemessage.textContent=`${message.errors.price[0]}`
         errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+        
         errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+        // errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
       }
       title.value = '';
   description.value = '';
+
       
     }
     if(message.status===200){
