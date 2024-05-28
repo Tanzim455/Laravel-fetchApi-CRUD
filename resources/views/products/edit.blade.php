@@ -47,11 +47,10 @@
     const errortitlemessage = document.querySelector('.errortitlemessage');
     const errordescriptionmessage = document.querySelector('.errordescriptionmessage');
 
-        form.addEventListener('submit',e=>{
+        form.addEventListener('submit',async(e)=>{
              e.preventDefault();
-             console.log(title.value);
-            // console.log(description.value);
-             fetch(`http://127.0.0.1:8000/products/${id.value}`, {
+             
+           const response=await  fetch(`http://127.0.0.1:8000/products/${id.value}`, {
    method: 'PUT',
    body: JSON.stringify({
      id:id.value,
@@ -63,8 +62,9 @@
          'X-CSRF-TOKEN': csrfToken,
        },
  })
-  .then((response) => response.json())
-   .then((json) => {
+ const json=await response.json();
+  
+   
     if(json.status===400){
         if(json.errors.title){
         errortitlemessage.textContent=`${json.errors.title[1]}`
@@ -86,9 +86,8 @@
     if(json.status===200){
       successmessage.textContent=`${json.message}`;
       successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
-      
-    }
-   });
+     
+    };
    
          });
          

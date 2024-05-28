@@ -40,7 +40,7 @@
    // Assuming you have an HTML form with input fields for title and description
 // const form = document.querySelector('#your-form-id'); // Replace with your actual form ID
 
-form.addEventListener('submit',  (e) => {
+form.addEventListener('submit',  async (e) => {
   e.preventDefault();
 
   // Validate input fields
@@ -54,7 +54,7 @@ form.addEventListener('submit',  (e) => {
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
   
-    const response = fetch('http://127.0.0.1:8000/products/store', {
+    const response =await fetch('http://127.0.0.1:8000/products/store', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -65,9 +65,9 @@ form.addEventListener('submit',  (e) => {
         description: description.value,
       }),
     });
-  response.then(data=>{
-    return data.json();
-  }).then(message=>{
+  
+    let message=await response.json();
+  
     // console.log(message);
     if(message.status===400){
       console.log(message.errors);
@@ -86,21 +86,23 @@ form.addEventListener('submit',  (e) => {
         errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
         errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
       }
-      
+      title.value = '';
+  description.value = '';
       
     }
     if(message.status===200){
       successmessage.textContent=`${message.message}`;
       successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
-      
+      title.value = '';
+  description.value = '';
     }
   })
-    })
+  
+  
     
 
   // Clear input fields
-  title.value = '';
-  description.value = '';
+
 
 
     //  axios.post('http://127.0.0.1:8000/products').then(data=>{

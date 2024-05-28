@@ -39,14 +39,16 @@
 //    
 
 
-
-let products=fetch('http://127.0.0.1:8000/products')
+async function fetchallProducts(){
+    let products=await fetch('http://127.0.0.1:8000/products')
 // console.log(products);
 
 
     let tbody=document.querySelector('tbody');
-    products.then(response => response.json())
-  .then(data =>{
+    let data=await products.json();
+    console.log(data);
+  
+   
     data.forEach(d=> {
 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
@@ -68,36 +70,36 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
           editBtn.classList.add('edit-btn', 'text-gray-900', 'bg-white', 'border', 'border-gray-300', 'focus:outline-none', 'hover:bg-gray-100', 'focus:ring-4', 'focus:ring-gray-100', 'font-medium', 'rounded-lg', 'text-sm', 'px-5', 'py-2.5', 'me-2', 'mb-2', 'dark:bg-gray-800', 'dark:text-white', 'dark:border-gray-600', 'dark:hover:bg-gray-700', 'dark:hover:border-gray-600', 'dark:focus:ring-gray-700');
 
 
-          button.addEventListener('click',(e)=>{
+          button.addEventListener('click',async (e)=>{
                e.preventDefault();
-               fetch(`http://127.0.0.1:8000/products/${d.id}`,{
+            let response=await fetch(`http://127.0.0.1:8000/products/${d.id}`,{
                 method:"DELETE",
                 headers: {
         'Content-type': 'application/json; charset=UTF-8',
         'X-CSRF-TOKEN': csrfToken,
       },
                })  
-               .then(res=>res.json())
-           .then(data=>{
+               
+               let deleteData=await response.json();
+           
             let successmessage=document.querySelector('.successmessage')
-            successmessage.textContent=`${data.message}`
+            successmessage.textContent=`${deleteData.message}`
             successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
             tr.remove();
-           });
+           
            
             
           })
-          editBtn.addEventListener('click',(e)=>{
-            e.preventDefault();
-            let singleProduct= fetch(`http://127.0.0.1:8000/products/${d.id}`)
-
-            singleProduct.then(res=>{
-                return res.json()
-            }).then(data=>{
-                window.location.href=`http://127.0.0.1:8000/products/${d.id}/edit`
-            })
+         
             
-          })
+          editBtn.addEventListener('click', (e)=>{
+            e.preventDefault();
+            window.location.href=`http://127.0.0.1:8000/products/${d.id}/edit`
+            
+            })
+           
+            
+            
          tr.appendChild(td)
          tr.appendChild(td2)
          tr.appendChild(td3)
@@ -106,7 +108,9 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
          tbody.appendChild(tr)
 
     });
-  }).catch(error => console.error('Error:', error));
+    
+}
+fetchallProducts();
  
 
   
