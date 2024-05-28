@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 class CartController extends Controller
 {
     //
+    public function index(){
+        $carts=Cart::all();
+        return response()->json($carts);
+    }
     public function addToCart(Request $request){
         $productId=$request->input('product_id');
         $singleProduct=Product::findOrfail($productId);

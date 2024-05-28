@@ -21,5 +21,5 @@ Route::get('/',[ProductController::class,'allproducts']);
  Route::get('viewall',function(){
      return view('products.viewall');
  });
-
+Route::get('/carts',[CartController::class,'index']);
  Route::post('/addToCart',[CartController::class,'addToCart'])->name('addToCart');

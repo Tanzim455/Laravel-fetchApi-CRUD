@@ -6,14 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
 </head>
 <body>
-    <div class="flex">
-        @foreach ($products as $product)
-         <div>Product One</div>
-        @endforeach
-        
-    </div>
+  
     
     
         
@@ -28,12 +24,12 @@
                 <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{$product->description}}</p>
                 <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Price-{{$product->price}}</p>
                
-                <form action="{{route('addToCart')}}" method="post">
-                    @csrf
-                <input  type="hidden" name="product_id" value="{{$product->id}}"     id="">
+                <form class="form">
+                    
+                <input  type="hidden" class="product_id" name="product_id" value="{{$product->id}}"     id="">
                 <div class="mb-5">
                     <label for="quantity">Quantity:</label>
-              <input type="number" class="price bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+              <input type="number" class="quantity bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                name="quantity" min="1" max="100">
               
                   </div>
@@ -108,7 +104,47 @@
             </div>
         </div>
    
-    
+    <script>
+        const form = document.querySelector('.form');
+        
+        form.addEventListener('submit',async (e)=>{
+           
+           
+            e.preventDefault();
+            const quantity=document.querySelector('.quantity');
+            const productId=document.querySelector('.product_id');
+
+            const singleProduct=await fetch(`http://127.0.0.1:8000/products/${productId.value}`)
+
+            
+           const singleProductResponse=await singleProduct.json()
+
+           const allCarts=await fetch(`http://127.0.0.1:8000/carts`)
+
+           const allCartsResponse=await allCarts.json();
+           console.log(allCartsResponse);
+           //get all productId from cards
+            const cartIds=allCartsResponse.map(c=>c.product_id);
+        
+        console.log(productId.value);
+         const isProductId=cartIds.includes(productId.value);
+        
+         if(isProductId){
+            console.log("Product Id is there in cart");
+         }else{
+            console.log("Product id is not there in cart");
+         }
+         
+           })
+            
+           
+                    
+            
+            
+       
+        
+       
+    </script>
     
     
 
