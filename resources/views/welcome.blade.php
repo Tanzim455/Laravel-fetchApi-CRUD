@@ -119,7 +119,7 @@ allForm.forEach(form => {
 
         
 
-        try {
+    
             const singleProductResponse = await fetch(`http://127.0.0.1:8000/products/${productId}`);
             const singleProduct = await singleProductResponse.json();
             const price = parseFloat(singleProduct.price);
@@ -142,34 +142,38 @@ allForm.forEach(form => {
   console.log("Current quantity", currentCartQuantity);
   
   let inputQuantity=parseFloat(quantity);
-  
+  console.log("Input quantity",inputQuantity);
   inputQuantity+currentCartQuantity;
-  
-  const updatedPrice=inputQuantity * price;
+  console.log(inputQuantity);
 
-  
+//   console.log(upDatedQuantity);
+   const updatedPrice=inputQuantity * price;
 
-let Obj={
+
+
+let CartObj={
     quantity:inputQuantity,
     total_price:updatedPrice,
     product_id: productId
 }
-  console.log(Obj);
+ 
 
 
 
-
-
-  const res=await axios.post('http://127.0.0.1:8000/addTo/Cart',{
-    quantity:inputQuantity,
-    total_price:updatedPrice,
-    product_id: productId
-  });
-
-
+const response = await fetch('http://127.0.0.1:8000/addTo/Cart', {
+                     method: 'POST',
+                     headers: {
+                         'Content-type': 'application/json; charset=UTF-8',
+                         'X-CSRF-TOKEN': csrfToken,
+                     },
+                     body: JSON.stringify(CartObj)
+                    })
+                console.log(response);
+          
+  
 
             } else {
-                console.log("Product not there in cart");
+                // console.log("Product not there in cart");
                  const response = await fetch('http://127.0.0.1:8000/addTo/Cart', {
                      method: 'POST',
                      headers: {
@@ -183,18 +187,13 @@ let Obj={
                         product_id: productId
                     }),
                 });
-                    //  console.log(response);
+                     console.log(response);
                 
             }
-
-        }catch(error){
-            console.log(error);
-        }
-
-    })
+        })
+    
 })
- 
-
+    
 
 
 
