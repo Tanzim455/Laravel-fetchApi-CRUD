@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/',[ProductController::class,'allproducts']);
- Route::resource('products',ProductController::class);
- Route::post('products/store',[ProductController::class,'store'])->name('productsstore');
+  Route::resource('products',ProductController::class);
+  Route::post('products/store',[ProductController::class,'store'])->name('productsstore');
  Route::get('viewall',function(){
      return view('products.viewall');
  });
-Route::get('/carts',[CartController::class,'index']);
- Route::post('/addToCart',[CartController::class,'addToCart'])->name('addToCart');
+  Route::get('/carts',[CartController::class,'index']);
+    Route::post('addToCart',[CartController::class,'addToCart'])->name('addToCart');

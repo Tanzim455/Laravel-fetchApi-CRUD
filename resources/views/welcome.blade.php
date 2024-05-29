@@ -123,24 +123,63 @@
               
             const singleProductResponse=await singleProduct.json()
             console.log(singleProductResponse);
-            const price=singleProductResponse.price;
-            console.log("The price is",price);
+           
+            const price=singleProductResponse.price
+            
             const allCarts=await fetch(`http://127.0.0.1:8000/carts`)
             
             const allCartsResponse=await allCarts.json();
-            console.log(allCartsResponse);
+           
            
              const cartIds=allCartsResponse.map(c=>c.product_id);
             
-        console.log(productId);
         
-         const convertToInt=parseInt(productId);
-            const isProductId=cartIds.includes(convertToInt);
-              console.log(isProductId);
+        
+         const convertToIntProductId=parseInt(productId);
+            const isProductId=cartIds.includes(convertToIntProductId);
+              
             if(isProductId){
-                console.log("Update the cart");
+                
+                
+               const singleProduct =allCartsResponse.filter(cart=>cart.product_id===convertToIntProductId);
+                 
+                 const currentCartQuantity=singleProduct[0].quantity;
+                const updatedQuantity=currentCartQuantity+parseInt(quantity);
+                const updatedPrice=updatedQuantity * price;
+                   
+                const response =await fetch('http://127.0.0.1:8000/addToCart', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        'X-CSRF-TOKEN': csrfToken,
+      },
+      body: JSON.stringify({
+        
+        quantity:updatedQuantity,
+        total_price:updatedPrice
+      }),
+    });
+
+    
+       
+                
+                
+                 
+                
             }else{
-                console.log("Add new product to the cart");
+                 const response =await fetch('http://127.0.0.1:8000/addToCart', {
+       method: 'POST',
+       headers: {
+         'Content-type': 'application/json; charset=UTF-8',
+         'X-CSRF-TOKEN': csrfToken,
+       },
+       body: JSON.stringify({
+         price:price,
+        quantity:quantity,
+         total_price:price * quantity
+       }),
+     });
+     console.log(response);
             }
         })
     })
@@ -148,23 +187,7 @@
 
         
 
-    //     if(isProductId){
-    //         const response =await fetch('http://127.0.0.1:8000/products/addToCart', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-type': 'application/json; charset=UTF-8',
-    //     'X-CSRF-TOKEN': csrfToken,
-    //   },
-    //   body: JSON.stringify({
-    //     price: price,
-    //     quantity:singleProductResponse.quantity+=quantity.value,
-    //     price:price.value
-    //   }),
-    // });
-    //     }else{
-    //         console.log("Product not there in cart");
-    //     }
-            
+       
         
          
    
