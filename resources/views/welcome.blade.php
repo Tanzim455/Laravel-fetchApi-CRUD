@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
 </head>
 <body>
@@ -26,11 +27,11 @@
                
                 <form class="form">
                     
-                <input  type="hidden" class="product_id" name="product_id" value="{{$product->id}}"     id="">
+                <input  type="text" class="product_id" name="product_id" value="{{$product->id}}"     id="">
                 <div class="mb-5">
                     <label for="quantity">Quantity:</label>
               <input type="number" class="quantity bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-               name="quantity" min="1" max="100">
+               name="quantity"  min="1" max="100">
               
                   </div>
                 <button  class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -105,37 +106,70 @@
         </div>
    
     <script>
-        const form = document.querySelector('.form');
-        
-        form.addEventListener('submit',async (e)=>{
-           
-           
-            e.preventDefault();
-            const quantity=document.querySelector('.quantity');
-            const productId=document.querySelector('.product_id');
+        const allForm = document.querySelectorAll('.form');
+        allForm.forEach(form => {
+            form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target; // The form being submitted
+        console.log(form);
 
-            const singleProduct=await fetch(`http://127.0.0.1:8000/products/${productId.value}`)
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const quantity = form.querySelector('.quantity').value; // Get the quantity within the form
+        const productId = form.querySelector('.product_id').value; // Get the product_id within the form
 
+        console.log("The latest Id is",productId); 
+        const singleProduct=await fetch(`http://127.0.0.1:8000/products/${productId}`)
+             
+              
+            const singleProductResponse=await singleProduct.json()
+            console.log(singleProductResponse);
+            const price=singleProductResponse.price;
+            console.log("The price is",price);
+            const allCarts=await fetch(`http://127.0.0.1:8000/carts`)
             
-           const singleProductResponse=await singleProduct.json()
-
-           const allCarts=await fetch(`http://127.0.0.1:8000/carts`)
-
-           const allCartsResponse=await allCarts.json();
-           console.log(allCartsResponse);
-           //get all productId from cards
-            const cartIds=allCartsResponse.map(c=>c.product_id);
+            const allCartsResponse=await allCarts.json();
+            console.log(allCartsResponse);
+           
+             const cartIds=allCartsResponse.map(c=>c.product_id);
+            
+        console.log(productId);
         
-        console.log(productId.value);
-         const isProductId=cartIds.includes(productId.value);
+         const convertToInt=parseInt(productId);
+            const isProductId=cartIds.includes(convertToInt);
+              console.log(isProductId);
+            if(isProductId){
+                console.log("Update the cart");
+            }else{
+                console.log("Add new product to the cart");
+            }
+        })
+    })
+             
+
         
-         if(isProductId){
-            console.log("Product Id is there in cart");
-         }else{
-            console.log("Product id is not there in cart");
-         }
+
+    //     if(isProductId){
+    //         const response =await fetch('http://127.0.0.1:8000/products/addToCart', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-type': 'application/json; charset=UTF-8',
+    //     'X-CSRF-TOKEN': csrfToken,
+    //   },
+    //   body: JSON.stringify({
+    //     price: price,
+    //     quantity:singleProductResponse.quantity+=quantity.value,
+    //     price:price.value
+    //   }),
+    // });
+    //     }else{
+    //         console.log("Product not there in cart");
+    //     }
+            
+        
          
-           })
+   
+
+
             
            
                     
