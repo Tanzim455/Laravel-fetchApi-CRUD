@@ -22,4 +22,4 @@ Route::get('/',[ProductController::class,'allproducts']);
      return view('products.viewall');
  });
   Route::get('/carts',[CartController::class,'index']);
-    Route::post('addToCart',[CartController::class,'addToCart'])->name('addToCart');
+    Route::post('addTo/Cart',[CartController::class,'addToCart'])->name('addToCart');

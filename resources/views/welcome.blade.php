@@ -7,7 +7,7 @@
     <title>Document</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
   
@@ -106,9 +106,9 @@
         </div>
    
     <script>
-        const allForm = document.querySelectorAll('.form');
-        allForm.forEach(form => {
-            form.addEventListener('submit', async (e) => {
+       const allForm = document.querySelectorAll('.form');
+allForm.forEach(form => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const form = e.target; // The form being submitted
         console.log(form);
@@ -117,72 +117,95 @@
         const quantity = form.querySelector('.quantity').value; // Get the quantity within the form
         const productId = form.querySelector('.product_id').value; // Get the product_id within the form
 
-        console.log("The latest Id is",productId); 
-        const singleProduct=await fetch(`http://127.0.0.1:8000/products/${productId}`)
-             
-              
-            const singleProductResponse=await singleProduct.json()
-            console.log(singleProductResponse);
-           
-            const price=singleProductResponse.price
-            
-            const allCarts=await fetch(`http://127.0.0.1:8000/carts`)
-            
-            const allCartsResponse=await allCarts.json();
-           
-           
-             const cartIds=allCartsResponse.map(c=>c.product_id);
-            
         
-        
-         const convertToIntProductId=parseInt(productId);
-            const isProductId=cartIds.includes(convertToIntProductId);
-              
-            if(isProductId){
-                
-                
-               const singleProduct =allCartsResponse.filter(cart=>cart.product_id===convertToIntProductId);
-                 
-                 const currentCartQuantity=singleProduct[0].quantity;
-                const updatedQuantity=currentCartQuantity+parseInt(quantity);
-                const updatedPrice=updatedQuantity * price;
-                   
-                const response =await fetch('http://127.0.0.1:8000/addToCart', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'X-CSRF-TOKEN': csrfToken,
-      },
-      body: JSON.stringify({
-        
-        quantity:updatedQuantity,
-        total_price:updatedPrice
-      }),
-    });
 
-    
+        try {
+            const singleProductResponse = await fetch(`http://127.0.0.1:8000/products/${productId}`);
+            const singleProduct = await singleProductResponse.json();
+            const price = parseFloat(singleProduct.price);
+            
+
+            const allCartsResponse = await fetch(`http://127.0.0.1:8000/carts`);
+            const allCarts = await allCartsResponse.json();
+            console.log(allCarts);
+
+            const cartIds = allCarts.map(c => c.product_id);
+            const convertToIntProductId = parseFloat(productId);
+            const isProductId = cartIds.includes(convertToIntProductId);
+
+          if (isProductId) {
+  console.log("Product Id is there in cart");
+
+  const singleProduct = allCarts.find(cart => cart.product_id === convertToIntProductId);
+  // console.log("Single product is",singleProduct);
+  const currentCartQuantity = parseFloat(singleProduct.quantity);
+  console.log("Current quantity", currentCartQuantity);
+  
+  let inputQuantity=parseFloat(quantity);
+  
+  inputQuantity+currentCartQuantity;
+  
+  const updatedPrice=inputQuantity * price;
+
+  
+
+let Obj={
+    quantity:inputQuantity,
+    total_price:updatedPrice,
+    product_id: productId
+}
+  console.log(Obj);
+
+
+
+
+
+  const res=await axios.post('http://127.0.0.1:8000/addTo/Cart',{
+    quantity:inputQuantity,
+    total_price:updatedPrice,
+    product_id: productId
+  });
+
+
+
+            } else {
+                console.log("Product not there in cart");
+                 const response = await fetch('http://127.0.0.1:8000/addTo/Cart', {
+                     method: 'POST',
+                     headers: {
+                         'Content-type': 'application/json; charset=UTF-8',
+                         'X-CSRF-TOKEN': csrfToken,
+                     },
+                     body: JSON.stringify({
+                         price: price,
+                        quantity: quantity,
+                         total_price: price * quantity,
+                        product_id: productId
+                    }),
+                });
+                    //  console.log(response);
+                
+            }
+
+        }catch(error){
+            console.log(error);
+        }
+
+    })
+})
+ 
+
+
+
+
+</script>
+
        
                 
                 
                  
                 
-            }else{
-                 const response =await fetch('http://127.0.0.1:8000/addToCart', {
-       method: 'POST',
-       headers: {
-         'Content-type': 'application/json; charset=UTF-8',
-         'X-CSRF-TOKEN': csrfToken,
-       },
-       body: JSON.stringify({
-         price:price,
-        quantity:quantity,
-         total_price:price * quantity
-       }),
-     });
-     console.log(response);
-            }
-        })
-    })
+           
              
 
         
@@ -200,8 +223,6 @@
             
        
         
-       
-    </script>
     
     
 

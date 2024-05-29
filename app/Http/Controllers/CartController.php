@@ -26,7 +26,7 @@ class CartController extends Controller
         if($cart){
             
          
-            $updatedQuanity=$cart->quantity += $quantity;
+            $updatedQuanity=$cart->quantity + $quantity;
              
             $updatedTotalPrice=$updatedQuanity * $price;
             
