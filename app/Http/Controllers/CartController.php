@@ -10,7 +10,7 @@ class CartController extends Controller
 {
     //
     public function index(){
-        $carts=Cart::all();
+        $carts=Cart::join('products','carts.product_id','products.id')->get();
         return response()->json($carts);
     }
     public function addToCart(Request $request){

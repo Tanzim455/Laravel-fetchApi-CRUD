@@ -17,9 +17,9 @@ class ProductController extends Controller
      */
     public function allproducts():View{
         $carts=Cart::join('products','carts.product_id','products.id')->get();
-         $cartLength=Cart::count();
+        
         $products=Product::select('id','title','description','price')->get();
-        return view('welcome',compact('products','carts','cartLength'));
+        return view('welcome',compact('products','carts'));
     }
     public function index():JsonResponse
     {
