@@ -165,12 +165,102 @@
         </div> --}}
         <div class="maindiv flex flex-col max-w-3xl p-6 space-y-4 sm:p-10 dark:bg-gray-50 dark:text-gray-800">
             <h2 class=" text-xl font-semibold">Your cart-Total items in cart <span class="cartLength"></span></h2>
+            <ul class=""></ul>
         </div>
     <script>
        const allForm = document.querySelectorAll('.form');
+      allCarts();
+     
+       async function allCarts(){
+       const cartResponse=await fetch('http://127.0.0.1:8000/carts')
+       
+       const allCarts = await cartResponse.json();
+
+       let cartLength=allCarts.length
+
+       let totalCartAmount=document.querySelector('.cartLength');
+
+        totalCartAmount.textContent=cartLength
+       
+       let maincartdiv=document.querySelector('.maincartdiv');
+    const carttitle=document.querySelector('.carttitle');
+    const cartdescription=document.querySelector('.cartdescription')
+    const cartprice=document.querySelector('.cartprice')
+    const totalquantity=document.querySelector('.totalquantity')
+    const perstockprice=document.querySelector('.perstockprice')
+    const totalPrice=document.querySelector('.totalprice')
+    let maindiv=document.querySelector('.maindiv')
+   
+       allCarts.forEach(c=>{
+        
+          let ul=document.createElement('ul');
+          ul.classList.add('flex','flex-col','divide-y','dark:divide-gray-300')
+           let li=document.createElement('li');
+           
+           li.classList.add('flex','flex-col','py-6','sm:flex-row','sm:justify-between');
+          
+           
+          //firstDiv inside li
+          let firstDivInsideLi=document.createElement('div');
+           firstDivInsideLi.classList.add('flex','w-full','space-x-2','sm:space-x-4');
+           //First  Div inside first div 
+           let firstNestedDivInsideFirstDiv=document.createElement('div');
+           firstNestedDivInsideFirstDiv.classList.add('flex','pb-2','justify-between','w-full');
+           //first div inside the first nested div
+           let firstDivInsideFirstNestedDiv=document.createElement('div');
+           firstDivInsideFirstNestedDiv.classList.add('flex','justify-between','w-full','pb-2','space-x-2');
+           //first child div inside first div inside the first nested div
+            let first_child_div_inside_first_div_inside_nested_div=document.createElement('div');
+            first_child_div_inside_first_div_inside_nested_div.classList.add('space-y-1');
+            let second_child_div_inside_first_div_inside_nested_div=document.createElement('div');
+            second_child_div_inside_first_div_inside_nested_div.classList.add('text-right');
+            let heading_inside_first_child=document.createElement('div');
+            
+            heading_inside_first_child.classList.add('text-lg','font-semibold','leading-snug','sm:pr-8');
+            heading_inside_first_child.textContent=`${c.title}`;
+            console.log(heading_inside_first_child);
+            let paragraph_inside_first_child=document.createElement('div');
+            
+            paragraph_inside_first_child.classList.add('text-sm','dark:text-gray-600');
+            paragraph_inside_first_child.textContent=`${c.description}`;
+
+            let heading_inside_second_child=document.createElement('div');
+            heading_inside_second_child.classList.add('text-lg','font-semibold')
+            heading_inside_second_child.textContent=`${c.price}`;
+            console.log(heading_inside_second_child);
+            first_child_div_inside_first_div_inside_nested_div.appendChild(heading_inside_first_child);
+            first_child_div_inside_first_div_inside_nested_div.appendChild(paragraph_inside_first_child);
+            second_child_div_inside_first_div_inside_nested_div.appendChild(heading_inside_second_child);
+            firstNestedDivInsideFirstDiv.appendChild(first_child_div_inside_first_div_inside_nested_div);
+            firstNestedDivInsideFirstDiv.appendChild(second_child_div_inside_first_div_inside_nested_div);
+           firstNestedDivInsideFirstDiv.appendChild(firstDivInsideFirstNestedDiv);
+           firstDivInsideLi.appendChild(firstNestedDivInsideFirstDiv);
+           maindiv.appendChild(ul);
+          //Appenping li
+          ul.appendChild(li)
+
+         
+          li.appendChild(firstDivInsideLi);
+          //first nested div inside first Div Inside Li
+          
+           
+          
+          
+        //   maindiv.appendChild(ul);
+        
+       })
+
+       
+
+            
+}
+
 allForm.forEach(form => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+         
+         console.log(carts);
         const form = e.target; // The form being submitted
         console.log(form);
 
@@ -188,14 +278,14 @@ allForm.forEach(form => {
 
             const allCartsResponse = await fetch(`http://127.0.0.1:8000/carts`);
             const allCarts = await allCartsResponse.json();
-            console.log(allCarts);
+          
 
             const cartIds = allCarts.map(c => c.product_id);
             const convertToIntProductId = parseFloat(productId);
             const isProductId = cartIds.includes(convertToIntProductId);
 
           if (isProductId) {
-  console.log("Product Id is there in cart");
+  
 
   const singleProduct = allCarts.find(cart => cart.product_id === convertToIntProductId);
   // console.log("Single product is",singleProduct);
@@ -223,9 +313,8 @@ let CartObj={
                      },
                      body: JSON.stringify(CartObj)
                     })
-                console.log(response);
-          
-  
+               
+                   
 
             } else {
                 // console.log("Product not there in cart");
@@ -243,114 +332,19 @@ let CartObj={
                     }),
                 });
                      console.log(response);
+                     
                 
             }
+            
         })
     
 })
     
 //Cart List 
 
-async function allCarts(){
-       const cartResponse=await fetch('http://127.0.0.1:8000/carts')
-       
-       const allCarts = await cartResponse.json();
 
-       let cartLength=allCarts.length
 
-       let totalCartAmount=document.querySelector('.cartLength');
 
-        totalCartAmount.textContent=cartLength
-       
-       let maincartdiv=document.querySelector('.maincartdiv');
-    const carttitle=document.querySelector('.carttitle');
-    const cartdescription=document.querySelector('.cartdescription')
-    const cartprice=document.querySelector('.cartprice')
-    const totalquantity=document.querySelector('.totalquantity')
-    const perstockprice=document.querySelector('.perstockprice')
-    const totalPrice=document.querySelector('.totalprice')
-    let maindiv=document.querySelector('.maindiv')
-   
-       allCarts.forEach(c=>{
-        
-          let ul=document.createElement('ul');
-          ul.classList.add('flex','flex-col','divide-y','dark:divide-gray-300')
-           let li=document.createElement('li');
-           
-           li.classList.add('flex','flex-col','py-6','sm:flex-row','sm:justify-between');
-           
-          let firstParentDiv=document.createElement('div');
-          firstParentDiv.classList.add('flex','w-full','space-x-2','space-x-2');
-          let firstDivInsideFirstParent=document.createElement('div');
-          firstDivInsideFirstParent.classList.add('flex','justify-between','w-full','pb-2','space-x-2');
-
-          
-          //first nested div inside first parentDiv
-           let firstNestedDivInsidefirstParent=document.createElement('div');
-           firstNestedDivInsidefirstParent.classList.add('flex','pb-2','justify-between','w-full');
-           //first div inside nested div 
-          let firstDivInsideNestedDiv=document.createElement('div');
-           firstDivInsideNestedDiv.classList.add('space-y-1');
-          //Heading of first div inside nested div
-           let headingOffirstDivInsideNestedDiv=document.createElement('div');
-             headingOffirstDivInsideNestedDiv.classList.add('text-lg','font-semibold','leading-snug','leading-snug')
-             headingOffirstDivInsideNestedDiv.textContent=`${c.title}`;
-            //Paragraph of first div inside nested div
-           let paragraphOffirstDivInsideNestedDiv=document.createElement('div');
-            paragraphOffirstDivInsideNestedDiv.textContent=`${c.description}`;
-            let secondDivInsideNestedDiv=document.createElement('div');
-          
-           secondDivInsideNestedDiv.classList.add('text-right');
-           let paraOfsecondDivInsideNestedDiv=document.createElement('div');
-          
-           paraOfsecondDivInsideNestedDiv.textContent=`${c.price}`;
-           firstDivInsideNestedDiv.appendChild(headingOffirstDivInsideNestedDiv);
-           firstDivInsideNestedDiv.appendChild(paragraphOffirstDivInsideNestedDiv);
-           secondDivInsideNestedDiv.appendChild(paraOfsecondDivInsideNestedDiv);
-           firstNestedDivInsidefirstParent.appendChild(firstDivInsideNestedDiv);
-           firstNestedDivInsidefirstParent.appendChild(secondDivInsideNestedDiv);
-           
-             firstDivInsideFirstParent.appendChild(firstNestedDivInsidefirstParent);
-           firstParentDiv.appendChild(firstDivInsideFirstParent);
-           ul.appendChild(li)
-         
-          maindiv.appendChild(ul);
-          maindiv.appendChild(firstParentDiv)
-          //div inside first  child
-        //        let childOne=document.createElement('div');
-        //        childOne.classList.add('space-y-1')
-        //        let childTwo=document.createElement('div')
-        //        childTwo.classList.add('text-right')
-        //        let childOneHeading=document.createElement('h2')
-        //        childOneHeading.classList.add('text-lg','font-semibold','leading-snug','leading-snug sm:pr-8')
-        //        let childOneParagraph=document.createElement('p')
-        //        childOneParagraph.classList.add('text-sm','dark:text-gray-600')
-        //        firstChildDiv.appendChild(childOne)
-        //   firstChildDiv.appendChild(childTwo)
-        //   li.appendChild(firstParentDiv);
-          
-        //  ul.classList.add('flex','flex-col','divide-y','dark:divide-gray-300')
-        //  maincartdiv.appendChild(ul)
-        //   let li=document.createElement('li');
-        //  li.classList.add('flex','flex-col','py-6','sm:flex-row','sm:justify-between')
-        //   ul.appendChild(li)
-        //   let firstDiv=document.createElement('<div>');
-        //     firstDiv.classList.add('flex','w-full','space-x-2','sm:space-x-4')
-
-        //    carttitle.textContent=`${c.title}`
-        //    cartdescription.textContent=`${c.description}`
-        //    cartprice.textContent=`${c.price}`
-        //    totalquantity.textContent=`${c.quantity}`
-        //    perstockprice.textContent=`${c.price}`
-        //    totalPrice.textContent=`${c.price}` * `${c.quantity}`
-       })
-
-       
-
-            
-}
-
-allCarts();
 </script>
 
        
