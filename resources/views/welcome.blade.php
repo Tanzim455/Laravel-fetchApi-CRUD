@@ -165,13 +165,14 @@
         </div> --}}
         <div class="maindiv flex flex-col max-w-3xl p-6 space-y-4 sm:p-10 dark:bg-gray-50 dark:text-gray-800">
             <h2 class=" text-xl font-semibold">Your cart-Total items in cart <span class="cartLength"></span></h2>
-            <ul class=""></ul>
+            
         </div>
     <script>
+        
        const allForm = document.querySelectorAll('.form');
-      allCarts();
+      
      
-       async function allCarts(){
+       async function fetchCarts(){
        const cartResponse=await fetch('http://127.0.0.1:8000/carts')
        
        const allCarts = await cartResponse.json();
@@ -192,55 +193,60 @@
     let maindiv=document.querySelector('.maindiv')
    
        allCarts.forEach(c=>{
-        
-          let ul=document.createElement('ul');
-          ul.classList.add('flex','flex-col','divide-y','dark:divide-gray-300')
-           let li=document.createElement('li');
+               let newdiv=document.createElement('div');
+               newdiv.classList.add('text-bold' ,'font-serif','text-2xl');
+               newdiv.textContent='New Cart added';
+               maindiv.append(newdiv);
+        //   let ul=document.createElement('ul');
+        //   ul.classList.add('flex','flex-col','divide-y','dark:divide-gray-300')
+        //    let li=document.createElement('li');
            
-           li.classList.add('flex','flex-col','py-6','sm:flex-row','sm:justify-between');
-          
+        //    li.classList.add('flex','flex-col','py-6','sm:flex-row','sm:justify-between');
+        //    maindiv.appendChild(ul);
+        //    ul.appendChild(li);
            
-          //firstDiv inside li
-          let firstDivInsideLi=document.createElement('div');
-           firstDivInsideLi.classList.add('flex','w-full','space-x-2','sm:space-x-4');
-           //First  Div inside first div 
-           let firstNestedDivInsideFirstDiv=document.createElement('div');
-           firstNestedDivInsideFirstDiv.classList.add('flex','pb-2','justify-between','w-full');
-           //first div inside the first nested div
-           let firstDivInsideFirstNestedDiv=document.createElement('div');
-           firstDivInsideFirstNestedDiv.classList.add('flex','justify-between','w-full','pb-2','space-x-2');
-           //first child div inside first div inside the first nested div
-            let first_child_div_inside_first_div_inside_nested_div=document.createElement('div');
-            first_child_div_inside_first_div_inside_nested_div.classList.add('space-y-1');
-            let second_child_div_inside_first_div_inside_nested_div=document.createElement('div');
-            second_child_div_inside_first_div_inside_nested_div.classList.add('text-right');
-            let heading_inside_first_child=document.createElement('div');
+        //   //firstDiv inside li
+        //   let firstDivInsideLi=document.createElement('div');
+        //    firstDivInsideLi.classList.add('flex','w-full','space-x-2','sm:space-x-4');
+        //    //First  Div inside first div 
+        //    li.appendChild(firstDivInsideLi);
+        //    let firstNestedDivInsideFirstDiv=document.createElement('div');
+        //    firstNestedDivInsideFirstDiv.classList.add('flex','pb-2','justify-between','w-full');
+        //    //first div inside the first nested div
+        //    let firstDivInsideFirstNestedDiv=document.createElement('div');
+        //    firstDivInsideFirstNestedDiv.classList.add('flex','justify-between','w-full','pb-2','space-x-2');
+        //    //first child div inside first div inside the first nested div
+        //     let first_child_div_inside_first_div_inside_nested_div=document.createElement('div');
+        //     first_child_div_inside_first_div_inside_nested_div.classList.add('space-y-1');
+        //     let second_child_div_inside_first_div_inside_nested_div=document.createElement('div');
+        //     second_child_div_inside_first_div_inside_nested_div.classList.add('text-right');
+        //     let heading_inside_first_child=document.createElement('div');
             
-            heading_inside_first_child.classList.add('text-lg','font-semibold','leading-snug','sm:pr-8');
-            heading_inside_first_child.textContent=`${c.title}`;
-            console.log(heading_inside_first_child);
-            let paragraph_inside_first_child=document.createElement('div');
+        //     heading_inside_first_child.classList.add('text-lg','font-semibold','leading-snug','sm:pr-8');
+        //     heading_inside_first_child.textContent=`${c.title}`;
+        //     console.log(heading_inside_first_child);
+        //     let paragraph_inside_first_child=document.createElement('div');
             
-            paragraph_inside_first_child.classList.add('text-sm','dark:text-gray-600');
-            paragraph_inside_first_child.textContent=`${c.description}`;
+        //     paragraph_inside_first_child.classList.add('text-sm','dark:text-gray-600');
+        //     paragraph_inside_first_child.textContent=`${c.description}`;
 
-            let heading_inside_second_child=document.createElement('div');
-            heading_inside_second_child.classList.add('text-lg','font-semibold')
-            heading_inside_second_child.textContent=`${c.price}`;
-            console.log(heading_inside_second_child);
-            first_child_div_inside_first_div_inside_nested_div.appendChild(heading_inside_first_child);
-            first_child_div_inside_first_div_inside_nested_div.appendChild(paragraph_inside_first_child);
-            second_child_div_inside_first_div_inside_nested_div.appendChild(heading_inside_second_child);
-            firstNestedDivInsideFirstDiv.appendChild(first_child_div_inside_first_div_inside_nested_div);
-            firstNestedDivInsideFirstDiv.appendChild(second_child_div_inside_first_div_inside_nested_div);
-           firstNestedDivInsideFirstDiv.appendChild(firstDivInsideFirstNestedDiv);
-           firstDivInsideLi.appendChild(firstNestedDivInsideFirstDiv);
-           maindiv.appendChild(ul);
-          //Appenping li
-          ul.appendChild(li)
+        //     let heading_inside_second_child=document.createElement('div');
+        //     heading_inside_second_child.classList.add('text-lg','font-semibold')
+        //     heading_inside_second_child.textContent=`${c.price}`;
+        //     console.log(heading_inside_second_child);
+        //     first_child_div_inside_first_div_inside_nested_div.appendChild(heading_inside_first_child);
+        //     first_child_div_inside_first_div_inside_nested_div.appendChild(paragraph_inside_first_child);
+        //     second_child_div_inside_first_div_inside_nested_div.appendChild(heading_inside_second_child);
+        //     firstNestedDivInsideFirstDiv.appendChild(first_child_div_inside_first_div_inside_nested_div);
+        //     firstNestedDivInsideFirstDiv.appendChild(second_child_div_inside_first_div_inside_nested_div);
+        //    firstNestedDivInsideFirstDiv.appendChild(firstDivInsideFirstNestedDiv);
+        //    firstDivInsideLi.appendChild(firstNestedDivInsideFirstDiv);
+          
+        //   //Appenping li
+        //   ul.appendChild(li)
 
          
-          li.appendChild(firstDivInsideLi);
+          
           //first nested div inside first Div Inside Li
           
            
@@ -260,7 +266,7 @@ allForm.forEach(form => {
         e.preventDefault();
         
          
-         console.log(carts);
+         
         const form = e.target; // The form being submitted
         console.log(form);
 
@@ -314,7 +320,7 @@ let CartObj={
                      body: JSON.stringify(CartObj)
                     })
                
-                   
+                    fetchCarts();
 
             } else {
                 // console.log("Product not there in cart");
@@ -331,15 +337,15 @@ let CartObj={
                         product_id: productId
                     }),
                 });
-                     console.log(response);
                      
-                
+                fetchCarts();  
             }
+            
             
         })
     
 })
-    
+ fetchCarts();   
 //Cart List 
 
 
