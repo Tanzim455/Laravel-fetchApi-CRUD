@@ -309,7 +309,23 @@
      secondDivInsideFirstNestedDiv.appendChild(buttontwo);
     firstNestedDivInsideFirstDiv.appendChild(secondDivInsideFirstNestedDiv);     
           //first nested div inside first Div Inside Li
-          
+    let secondParentDiv=document.createElement('div');
+    secondParentDiv.classList.add('space-y-1','text-right');
+    let secondParentDivParagrah=document.createElement('p');
+    let totalPrice=`${c.price}` * `${c.quantity}`
+    
+    secondParentDivParagrah.textContent=`Total amount ${totalPrice}`;
+    let spanInisdefirstPara=document.createElement('div');
+    span.classList.add('text-semibold');
+    span.textContent=`Quantity-${c.quantity} * Price-${c.price}`;
+
+    let secondParentDivParagraphTwo=document.createElement('p');
+    secondParentDivParagraphTwo.classList.add('text-sm','dark:text-gray-600');
+    secondParentDiv.appendChild(spanInisdefirstPara);
+    secondParentDivParagraphTwo.textContent='Not including taxes and shipping costs';
+    secondParentDiv.appendChild(secondParentDivParagrah);
+    secondParentDiv.appendChild(secondParentDivParagraphTwo);
+    cartItems.appendChild(secondParentDiv);
          
           
           
