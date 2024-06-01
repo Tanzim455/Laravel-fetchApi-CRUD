@@ -163,6 +163,7 @@
                 </button>
             </div>
         </div> --}}
+        <div class="cartmessage ml-8"></div>
         <div class="maindiv flex flex-col max-w-3xl p-6 space-y-4 sm:p-10 dark:bg-gray-50 dark:text-gray-800">
             <h2 class=" text-xl font-semibold">Your cart-Total items in cart <span class="cartLength"></span></h2>
         <div class="cart_items"></div>
@@ -173,7 +174,7 @@
        
      
        async function fetchCarts(){
-        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
        const cartResponse=await fetch('http://127.0.0.1:8000/carts')
        
        const allCarts = await cartResponse.json();
@@ -187,11 +188,11 @@
         
         cartItems.innerHTML = ''; 
        
-   
+       let cartmessage=document.querySelector('.cartmessage');
         
      // Clear previous items 
        allCarts.forEach(c=>{
-               
+              
            let ul=document.createElement('ul');
            ul.classList.add('flex','flex-col','divide-y','dark:divide-gray-300')
             let li=document.createElement('li');
@@ -286,9 +287,31 @@
     svg.classList.add('-mt-5')
     let span=document.createElement('span');
     span.classList.add('-mt-5')
-    span.textContent='Remove';
+    // spanDelete.textContent='Remove';
    button1.appendChild(svg);
     button1.appendChild(span);
+    button1.addEventListener('click', async(e) => {
+    e.preventDefault();
+   
+    
+   let singleCartDelete=await fetch(`http://127.0.0.1:8000/cart/${c.id}`,{
+                method:"DELETE",
+                headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        'X-CSRF-TOKEN': csrfToken,
+      },
+               });  
+   console.log(singleCartDelete);
+    let deletedCart=await singleCartDelete.json();
+    
+     cartmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400');
+     cartmessage.textContent=`${deletedCart.message}`;
+    fetchCarts();
+
+               
+   
+});
+
     let buttontwo=document.createElement('button');
     buttontwo.classList.add('flex','items-center','px-2','py-1','space-x-1');
     let spantwo=document.createElement('span');
@@ -307,6 +330,7 @@
      buttontwo.appendChild(spantwo);
      buttontwo.appendChild(svgtwo);
      secondDivInsideFirstNestedDiv.appendChild(buttontwo);
+     secondDivInsideFirstNestedDiv.appendChild(button1);
     firstNestedDivInsideFirstDiv.appendChild(secondDivInsideFirstNestedDiv);     
           //first nested div inside first Div Inside Li
     let secondParentDiv=document.createElement('div');
@@ -397,7 +421,10 @@ let CartObj={
                      body: JSON.stringify(CartObj)
                     })
                    
-                    
+                    let cartAddJson=await response.json();
+                    let cartmessage=document.querySelector('.cartmessage');
+                    cartmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400');
+                 cartmessage.textContent=`${cartAddJson.message}`;
 
             } else {
                 // console.log("Product not there in cart");
@@ -414,7 +441,10 @@ let CartObj={
                         product_id: productId
                     }),
                 });
-                 
+                let cartUpdateJson=await response.json();
+                let cartmessage=document.querySelector('.cartmessage');
+                cartmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400');
+                 cartmessage.textContent=`${cartUpdateJson.message}`;
                 
             }
             fetchCarts(); 

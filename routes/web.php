@@ -23,3 +23,4 @@ Route::get('/',[ProductController::class,'allproducts']);
  });
   Route::get('/carts',[CartController::class,'index']);
     Route::post('addTo/Cart',[CartController::class,'addToCart'])->name('addToCart');
+    Route::delete('cart/{id}',[CartController::class,'deleteCart'])->name('singlecart');
