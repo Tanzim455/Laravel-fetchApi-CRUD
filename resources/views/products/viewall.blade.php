@@ -27,7 +27,7 @@
                    Description
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Delete
+                    Action
                  </th>
                  
             </tr>
@@ -56,9 +56,12 @@ $(document).ready(function () {
                        <td>' + item.title + '</td>\
                       <td>' + item.description+ '</td>\
                         <td><button type="button" value="' + item.id + '" class="dltButton">Delete</button></td>\
+                        <td><button type="button" value="' + item.id + '" class="editButton">Edit</button></td>\
                       \</tr>');
                       $('td').addClass('px-6 py-4');
                       $('.dltButton').addClass('focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900');
+                      $('.editButton').addClass('edit-btn text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700');
+
                      
 
                     })
@@ -97,8 +100,26 @@ $(document).on('click', '.dltButton', function (e){
 })
 
 
-           
-                   
+$(document).on('click', '.editButton', function (e){
+    e.preventDefault();
+    let editId= $(this).val();
+    
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:8000/products/" + editId,
+                
+                success: function (response) {
+                    
+                    window.location.href=`http://127.0.0.1:8000/products/${editId}/edit`
+                        
+                }
+                });
+    
+                
+                     
+
+});
+
             
 
             
