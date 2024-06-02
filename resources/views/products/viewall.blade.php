@@ -8,6 +8,7 @@
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     
 </head>
 <body>
@@ -38,82 +39,178 @@
     <script>
 //    
 
+$(document).ready(function () {
+     fetchProducts();
+    function fetchProducts(){
+    $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:8000/products",
+                dataType: "json",
+                
+                success: function (response) {
+                    $('tbody').html("");
+                    $.each(response, function (key, item) {
+                        
+                        $('tbody').append('<tr>\
+                       <td>' + item.id + '</td>\
+                       <td>' + item.title + '</td>\
+                      <td>' + item.description+ '</td>\
+                        <td><button type="button" value="' + item.id + '" class="dltButton">Delete</button></td>\
+                      \</tr>');
+                      $('td').addClass('px-6 py-4');
+                      $('.dltButton').addClass('focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900');
+                     
 
-async function fetchallProducts(){
-    let products=await fetch('http://127.0.0.1:8000/products')
-// console.log(products);
+                    })
+                }
+});
+    }
+    
+$(document).on('click', '.dltButton', function (e){
+    e.preventDefault();
+    let deleteId= $('.dltButton').val();
+     $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: "DELETE",
+                url: "http://127.0.0.1:8000/products/" + deleteId,
+                dataType: "json",
+                success: function (response) {
+                    
+                    $('.successmessage').text(response.message);
+                    $('.successmessage').addClass()
+
+                    $('.successmessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400');
+
+                    fetchProducts();
+                        
+                }
+                });
+    
+
+                     
+
+})
 
 
-    let tbody=document.querySelector('tbody');
-    let data=await products.json();
-    console.log(data);
+           
+                   
+            
+
+            
+            // let deleteId= $('.dltButton').val();
+            
+            
+
+            // $.ajaxSetup({
+            //     headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     }
+            // });
+
+            // $.ajax({
+            //     type: "DELETE",
+            //     url: "http://127.0.0.1:8000/products/" + deleteId,
+            //     dataType: "json",
+            //     success: function (response) {
+                    
+            //         $('.successmessage').text(response.message);
+            //         $('.successmessage').addClass()
+
+            //         $('.successmessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400');
+
+            //         fetchProducts();
+                        
+            //     }
+            //     });
+            
+                       });
+
+                    
+                    
+            
+
+
+
+
+//     let products=await fetch('http://127.0.0.1:8000/products')
+// // console.log(products);
+
+
+//     let tbody=document.querySelector('tbody');
+//     let data=await products.json();
+//     console.log(data);
   
    
-    data.forEach(d=> {
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+//     data.forEach(d=> {
+// let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
-         let tr=document.createElement('tr');
-         let td=document.createElement('td');
-         let button=document.createElement('button');
-         let editBtn=document.createElement('button');
-         button.textContent='Delete';
-          editBtn.textContent='Edit';
-         td.textContent=`${d.id}`;
-         td.classList.add('px-6', 'py-4')
-         let td2=document.createElement('td');
-          td2.textContent=`${d.title}`;
-          td2.classList.add('px-6', 'py-4')
-          let td3=document.createElement('td');
-          td3.textContent=`${d.description}`;
-          td3.classList.add('px-6', 'py-4')
-          button.classList.add('dlt-button','focus:outline-none','text-white','bg-red-700','hover:bg-red-800','focus:ring-4', 'focus:ring-red-300','font-medium','rounded-lg','text-sm','px-5','py-2.5','me-2','mb-2','dark:bg-red-600', 'dark:hover:bg-red-700','dark:focus:ring-red-900')
-          editBtn.classList.add('edit-btn', 'text-gray-900', 'bg-white', 'border', 'border-gray-300', 'focus:outline-none', 'hover:bg-gray-100', 'focus:ring-4', 'focus:ring-gray-100', 'font-medium', 'rounded-lg', 'text-sm', 'px-5', 'py-2.5', 'me-2', 'mb-2', 'dark:bg-gray-800', 'dark:text-white', 'dark:border-gray-600', 'dark:hover:bg-gray-700', 'dark:hover:border-gray-600', 'dark:focus:ring-gray-700');
+//          let tr=document.createElement('tr');
+//          let td=document.createElement('td');
+//          let button=document.createElement('button');
+//          let editBtn=document.createElement('button');
+//          button.textContent='Delete';
+//           editBtn.textContent='Edit';
+//          td.textContent=`${d.id}`;
+//          td.classList.add('px-6', 'py-4')
+//          let td2=document.createElement('td');
+//           td2.textContent=`${d.title}`;
+//           td2.classList.add('px-6', 'py-4')
+//           let td3=document.createElement('td');
+//           td3.textContent=`${d.description}`;
+//           td3.classList.add('px-6', 'py-4')
+//           button.classList.add('dlt-button','focus:outline-none','text-white','bg-red-700','hover:bg-red-800','focus:ring-4', 'focus:ring-red-300','font-medium','rounded-lg','text-sm','px-5','py-2.5','me-2','mb-2','dark:bg-red-600', 'dark:hover:bg-red-700','dark:focus:ring-red-900')
+//           editBtn.classList.add('edit-btn', 'text-gray-900', 'bg-white', 'border', 'border-gray-300', 'focus:outline-none', 'hover:bg-gray-100', 'focus:ring-4', 'focus:ring-gray-100', 'font-medium', 'rounded-lg', 'text-sm', 'px-5', 'py-2.5', 'me-2', 'mb-2', 'dark:bg-gray-800', 'dark:text-white', 'dark:border-gray-600', 'dark:hover:bg-gray-700', 'dark:hover:border-gray-600', 'dark:focus:ring-gray-700');
 
 
-          button.addEventListener('click',async (e)=>{
-               e.preventDefault();
-            let response=await fetch(`http://127.0.0.1:8000/products/${d.id}`,{
-                method:"DELETE",
-                headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'X-CSRF-TOKEN': csrfToken,
-      },
-               })  
+//           button.addEventListener('click',async (e)=>{
+//                e.preventDefault();
+//             let response=await fetch(`http://127.0.0.1:8000/products/${d.id}`,{
+//                 method:"DELETE",
+//                 headers: {
+//         'Content-type': 'application/json; charset=UTF-8',
+//         'X-CSRF-TOKEN': csrfToken,
+//       },
+//                })  
                
-               let deleteData=await response.json();
+//                let deleteData=await response.json();
            
-            let successmessage=document.querySelector('.successmessage')
-            successmessage.textContent=`${deleteData.message}`
-            successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
-            tr.remove();
+//             let successmessage=document.querySelector('.successmessage')
+//             successmessage.textContent=`${deleteData.message}`
+//             successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
+//             tr.remove();
            
            
             
-          })
+//           })
          
             
-          editBtn.addEventListener('click', (e)=>{
-            e.preventDefault();
-            window.location.href=`http://127.0.0.1:8000/products/${d.id}/edit`
+//           editBtn.addEventListener('click', (e)=>{
+//             e.preventDefault();
+//             window.location.href=`http://127.0.0.1:8000/products/${d.id}/edit`
             
-            })
+//             })
            
             
             
-         tr.appendChild(td)
-         tr.appendChild(td2)
-         tr.appendChild(td3)
-         tr.appendChild(button)
-         tr.appendChild(editBtn)
-         tbody.appendChild(tr)
+//          tr.appendChild(td)
+//          tr.appendChild(td2)
+//          tr.appendChild(td3)
+//          tr.appendChild(button)
+//          tr.appendChild(editBtn)
+//          tbody.appendChild(tr)
 
-    });
+//     });
     
-}
-fetchallProducts();
+
+// fetchallProducts();
  
 
-  
+
 
 
 
