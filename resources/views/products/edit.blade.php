@@ -69,14 +69,28 @@
                 success: function (response) {
                      console.log(response);
                     
-                    if (response.status == 400) {
-                       
-                      $('.errortitlemessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                     if (response.status == 400) {
+                      if(response.errors.title){
+                        $('.errortitlemessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                        $('.errortitlemessage').text(response.errors.title[1]);
+                      }
+                      if(response.errors.description){
+                        $('.errordescriptionmessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                        $('.errordescriptionmessage').text(response.errors.description[1]);
+                      }
+                      if(response.errors.price){
+                        $('.errorpricemessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                        $('.errorpricemessage').text(response.errors.price[0]);
+                      }
+                       if(response.errors.title && response.errors.description && response.errors.price){
+                        $('.errortitlemessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
                       $('.errordescriptionmessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
                       $('.errorpricemessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
                       $('.errortitlemessage').text(response.errors.title[1]);
                       $('.errordescriptionmessage').text(response.errors.description[1]);
                       $('.errorpricemessage').text(response.errors.price[0])
+                       }
+                      
                     } 
                     if(response.status==200){
                       $('.successmessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400');
