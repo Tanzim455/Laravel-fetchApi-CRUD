@@ -7,7 +7,9 @@
     <title>Document</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
 </head>
 <body>
     
@@ -34,79 +36,125 @@
 </form>
 
 <script>
-    const form = document.querySelector('.form');
-    const title = document.querySelector('.title');
-    const description = document.querySelector('.description');
-    const price = document.querySelector('.price');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const successmessage = document.querySelector('.successmessage');
-    const errortitlemessage = document.querySelector('.errortitlemessage');
-    const errordescriptionmessage = document.querySelector('.errordescriptionmessage');
-    const errorpricemessage=document.querySelector('.errorpricemessage');
+   $(document).ready(function () {
+    $(document).on('submit', '.form', function (e) {
+          e.preventDefault();
+          var data = {
+                'title': $('.title').val(),
+                'description': $('.description').val(),
+                'price': $('.price').val(),
+                
+            }
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:8000/products/store",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    // console.log(response);
+                    console.log(response);
+                    if (response.status == 400) {
+                       
+                      $('.errortitlemessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                      $('.errordescriptionmessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                      $('.errorpricemessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                      $('.errortitlemessage').text(response.errors.title[1]);
+                      $('.errordescriptionmessage').text(response.errors.description[1]);
+                      $('.errorpricemessage').text(response.errors.price[0])
+                    } 
+                    if(response.status==200){
+                      $('.successmessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400');
+                      $('.successmessage').text(response.message);
+                      $('.title').val('');
+                      $('.description').val('');
+                      $('.price').val('')
+
+                    }
+                }
+            });
+    });
+
+
+   });
+    // const form = document.querySelector('.form');
+    // const title = document.querySelector('.title');
+    // const description = document.querySelector('.description');
+    // const price = document.querySelector('.price');
+    // const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    // const successmessage = document.querySelector('.successmessage');
+    // const errortitlemessage = document.querySelector('.errortitlemessage');
+    // const errordescriptionmessage = document.querySelector('.errordescriptionmessage');
+    // const errorpricemessage=document.querySelector('.errorpricemessage');
     
    // Assuming you have an HTML form with input fields for title and description
 // const form = document.querySelector('#your-form-id'); // Replace with your actual form ID
 
-form.addEventListener('submit',  async (e) => {
-  e.preventDefault();
+// form.addEventListener('submit',  async (e) => {
+//   e.preventDefault();
 
  
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+//   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
   
-    const response =await fetch('http://127.0.0.1:8000/products/store', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'X-CSRF-TOKEN': csrfToken,
-      },
-      body: JSON.stringify({
-        title: title.value,
-        description: description.value,
-        price:price.value
-      }),
-    });
+//     const response =await fetch('http://127.0.0.1:8000/products/store', {
+//       method: 'POST',
+//       headers: {
+//         'Content-type': 'application/json; charset=UTF-8',
+//         'X-CSRF-TOKEN': csrfToken,
+//       },
+//       body: JSON.stringify({
+//         title: title.value,
+//         description: description.value,
+//         price:price.value
+//       }),
+//     });
   
-    let message=await response.json();
+//     let message=await response.json();
   
      
-    if(message.status===400){
+//     if(message.status===400){
       
-      console.log(message.errors.price[0]);
-      if(message.errors.title){
-        errortitlemessage.textContent=`${message.errors.title[1]}`
-        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-      }
-      if(message.errors.price){
-        errorpricemessage.textContent=`${message.errors.price[0]}`
-        errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-      }
-      if(message.errors.description){
-        errordescriptionmessage.textContent=`${message.errors.description[1]}`
-        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+//       console.log(message.errors.price[0]);
+//       if(message.errors.title){
+//         errortitlemessage.textContent=`${message.errors.title[1]}`
+//         errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+//       }
+//       if(message.errors.price){
+//         errorpricemessage.textContent=`${message.errors.price[0]}`
+//         errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+//       }
+//       if(message.errors.description){
+//         errordescriptionmessage.textContent=`${message.errors.description[1]}`
+//         errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
        
-      }
-      if(message.errors.title && message.errors.description){
-        errortitlemessage.textContent=`${message.errors.title[1]}`
-        errordescriptionmessage.textContent=`${message.errors.description[1]}`
-         errorpricemessage.textContent=`${message.errors.price[0]}`
-        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+//       }
+//       if(message.errors.title && message.errors.description){
+//         errortitlemessage.textContent=`${message.errors.title[1]}`
+//         errordescriptionmessage.textContent=`${message.errors.description[1]}`
+//          errorpricemessage.textContent=`${message.errors.price[0]}`
+//         errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
         
-        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-        // errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-      }
-      title.value = '';
-  description.value = '';
+//         errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+//         // errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+//       }
+//       title.value = '';
+//   description.value = '';
 
       
-    }
-    if(message.status===200){
-      successmessage.textContent=`${message.message}`;
-      successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
-      title.value = '';
-  description.value = '';
-    }
-  })
+//     }
+//     if(message.status===200){
+//       successmessage.textContent=`${message.message}`;
+//       successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
+//       title.value = '';
+//   description.value = '';
+//     }
+//   })
   
   
     
