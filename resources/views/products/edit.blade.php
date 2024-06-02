@@ -35,18 +35,25 @@
         name="description" class="description bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
         <div class="errordescriptionmessage"></div>
     </div>
-    
+    <div class="mb-5">
+      <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+      <input type="text"
+      value="{{$product->price}}"
+      name="price" class="price bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      <div class="errorpricemessage"></div>
+  </div>
     <button  class="updateBtn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
     <script>
         const form = document.querySelector('.form');
     const title = document.querySelector('.title');
     const description = document.querySelector('.description');
+    const price=document.querySelector('.price');
     const id=document.querySelector('.hiddenid');
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const successmessage = document.querySelector('.successmessage');
     const errortitlemessage = document.querySelector('.errortitlemessage');
     const errordescriptionmessage = document.querySelector('.errordescriptionmessage');
-
+    const errorpricemessage=document.querySelector('.errorpricemessage');
         form.addEventListener('submit',async(e)=>{
              e.preventDefault();
              
@@ -55,7 +62,8 @@
    body: JSON.stringify({
      id:id.value,
      title:title.value,
-     description:description.value
+     description:description.value,
+     price:price.value
    }),
    headers: {
          'Content-type': 'application/json; charset=UTF-8',
@@ -75,11 +83,20 @@
         errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
        
       }
-        if(json.errors.title && json.errors.description){
-        errortitlemessage.textContent=`${json.errors.title[1]}`
-        errordescriptionmessage.textContent=`${json.errors.description[1]}`
-        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+      if(json.errors.price){
+        errorpricemessage.textContent=`${json.errors.price[0]}`
+        errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+       
+      }
+        if(json.errors.title && json.errors.description && json.errors.price){
+          
+        errortitlemessage.textContent=`${json.errors.title[1]}`;
+        errordescriptionmessage.textContent=`${json.errors.description[1]}`;
+        errorpricemessage.textContent=`${json.errors.price[0]}`;
+        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
+        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
+        errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
+
       }
     }
     

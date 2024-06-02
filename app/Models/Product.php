@@ -10,7 +10,12 @@ class Product extends Model
     use HasFactory;
     
     protected $fillable=['title','description','price'];
-    public function cart(){
-        return $this->belongsTo(Product::class);
+    protected static function booted()
+    {
+        static::deleting(function ($product) {
+            // Delete all associated cart items when the product is deleted
+            Cart::where('product_id', $product->id)->delete();
+        });
     }
+
 }

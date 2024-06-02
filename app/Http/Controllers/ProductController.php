@@ -94,6 +94,7 @@ class ProductController extends Controller
         if($product){
             $product->title=$request->input('title');
             $product->description=$request->input('description');
+            $product->price=$request->input('price');
             $product->update();
             return response()->json([
                 'status'=>200,
