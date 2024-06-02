@@ -7,6 +7,7 @@
     <title>Document</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     
 </head>
 <body>
@@ -44,69 +45,116 @@
   </div>
     <button  class="updateBtn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
     <script>
-        const form = document.querySelector('.form');
-    const title = document.querySelector('.title');
-    const description = document.querySelector('.description');
-    const price=document.querySelector('.price');
-    const id=document.querySelector('.hiddenid');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const successmessage = document.querySelector('.successmessage');
-    const errortitlemessage = document.querySelector('.errortitlemessage');
-    const errordescriptionmessage = document.querySelector('.errordescriptionmessage');
-    const errorpricemessage=document.querySelector('.errorpricemessage');
-        form.addEventListener('submit',async(e)=>{
-             e.preventDefault();
+        $(document).ready(function () {
+    $(document).on('submit', '.form', function (e) {
+          e.preventDefault();
+          var data = {
+                'title': $('.title').val(),
+                'description': $('.description').val(),
+                'price': $('.price').val(),
+                'hiddenid':$('.hiddenid').val()
+                
+            }
+           let hiddenId=$('.hiddenid').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "PUT",
+                url: "http://127.0.0.1:8000/products/"+hiddenId,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                     console.log(response);
+                    
+                    if (response.status == 400) {
+                       
+                      $('.errortitlemessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                      $('.errordescriptionmessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                      $('.errorpricemessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-red-50 dark:bg-red-800 dark:text-red-400');
+                      $('.errortitlemessage').text(response.errors.title[1]);
+                      $('.errordescriptionmessage').text(response.errors.description[1]);
+                      $('.errorpricemessage').text(response.errors.price[0])
+                    } 
+                    if(response.status==200){
+                      $('.successmessage').addClass('p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400');
+                      $('.successmessage').text(response.message);
+                      $('.title').val('');
+                      $('.description').val('');
+                      $('.price').val('')
+
+                    }
+                }
+            });
+    });
+
+
+   });
+//         const form = document.querySelector('.form');
+//     const title = document.querySelector('.title');
+//     const description = document.querySelector('.description');
+//     const price=document.querySelector('.price');
+//     const id=document.querySelector('.hiddenid');
+//     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+//     const successmessage = document.querySelector('.successmessage');
+//     const errortitlemessage = document.querySelector('.errortitlemessage');
+//     const errordescriptionmessage = document.querySelector('.errordescriptionmessage');
+//     const errorpricemessage=document.querySelector('.errorpricemessage');
+//         form.addEventListener('submit',async(e)=>{
+//              e.preventDefault();
              
-           const response=await  fetch(`http://127.0.0.1:8000/products/${id.value}`, {
-   method: 'PUT',
-   body: JSON.stringify({
-     id:id.value,
-     title:title.value,
-     description:description.value,
-     price:price.value
-   }),
-   headers: {
-         'Content-type': 'application/json; charset=UTF-8',
-         'X-CSRF-TOKEN': csrfToken,
-       },
- })
- const json=await response.json();
+//            const response=await  fetch(`http://127.0.0.1:8000/products/${id.value}`, {
+//    method: 'PUT',
+//    body: JSON.stringify({
+//      id:id.value,
+//      title:title.value,
+//      description:description.value,
+//      price:price.value
+//    }),
+//    headers: {
+//          'Content-type': 'application/json; charset=UTF-8',
+//          'X-CSRF-TOKEN': csrfToken,
+//        },
+//  })
+//  const json=await response.json();
   
    
-    if(json.status===400){
-        if(json.errors.title){
-        errortitlemessage.textContent=`${json.errors.title[1]}`
-        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-      }
-      if(json.errors.description){
-        errordescriptionmessage.textContent=`${json.errors.description[1]}`
-        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+//     if(json.status===400){
+//         if(json.errors.title){
+//         errortitlemessage.textContent=`${json.errors.title[1]}`
+//         errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+//       }
+//       if(json.errors.description){
+//         errordescriptionmessage.textContent=`${json.errors.description[1]}`
+//         errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
        
-      }
-      if(json.errors.price){
-        errorpricemessage.textContent=`${json.errors.price[0]}`
-        errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
+//       }
+//       if(json.errors.price){
+//         errorpricemessage.textContent=`${json.errors.price[0]}`
+//         errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
        
-      }
-        if(json.errors.title && json.errors.description && json.errors.price){
+//       }
+//         if(json.errors.title && json.errors.description && json.errors.price){
           
-        errortitlemessage.textContent=`${json.errors.title[1]}`;
-        errordescriptionmessage.textContent=`${json.errors.description[1]}`;
-        errorpricemessage.textContent=`${json.errors.price[0]}`;
-        errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
-        errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
-        errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
+//         errortitlemessage.textContent=`${json.errors.title[1]}`;
+//         errordescriptionmessage.textContent=`${json.errors.description[1]}`;
+//         errorpricemessage.textContent=`${json.errors.price[0]}`;
+//         errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
+//         errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
+//         errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
 
-      }
-    }
+//       }
+//     }
     
-    if(json.status===200){
-      successmessage.textContent=`${json.message}`;
-      successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
+//     if(json.status===200){
+//       successmessage.textContent=`${json.message}`;
+//       successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
      
-    };
+//     };
    
-         });
+//          });
          
-     </script>
+//      </script>
 </form>

@@ -98,12 +98,12 @@ class ProductController extends Controller
             $product->update();
             return response()->json([
                 'status'=>200,
-                'message'=>'Student Data updated Successfully.'
+                'message'=>'Product Data updated Successfully.'
             ]);
         }else{
             return response()->json([
                 'status'=>404,
-                'message'=>'Student not found'
+                'message'=>'Product data not found'
             ]);
         }
     }
