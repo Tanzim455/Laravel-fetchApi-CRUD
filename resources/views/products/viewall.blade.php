@@ -39,77 +39,65 @@
 //    
 
 
-async function fetchallProducts(){
-    let products=await fetch('http://127.0.0.1:8000/products')
-// console.log(products);
 
-
-    let tbody=document.querySelector('tbody');
-    let data=await products.json();
+async function fetchallProducts() {
+    let products = await fetch('http://127.0.0.1:8000/products');
+    let data = await products.json();
     console.log(data);
   
-   
-    data.forEach(d=> {
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        
-         let tr=document.createElement('tr');
-         let td=document.createElement('td');
-         let button=document.createElement('button');
-         let editBtn=document.createElement('button');
-         button.textContent='Delete';
-          editBtn.textContent='Edit';
-         td.textContent=`${d.id}`;
-         td.classList.add('px-6', 'py-4')
-         let td2=document.createElement('td');
-          td2.textContent=`${d.title}`;
-          td2.classList.add('px-6', 'py-4')
-          let td3=document.createElement('td');
-          td3.textContent=`${d.description}`;
-          td3.classList.add('px-6', 'py-4')
-          button.classList.add('dlt-button','focus:outline-none','text-white','bg-red-700','hover:bg-red-800','focus:ring-4', 'focus:ring-red-300','font-medium','rounded-lg','text-sm','px-5','py-2.5','me-2','mb-2','dark:bg-red-600', 'dark:hover:bg-red-700','dark:focus:ring-red-900')
-          editBtn.classList.add('edit-btn', 'text-gray-900', 'bg-white', 'border', 'border-gray-300', 'focus:outline-none', 'hover:bg-gray-100', 'focus:ring-4', 'focus:ring-gray-100', 'font-medium', 'rounded-lg', 'text-sm', 'px-5', 'py-2.5', 'me-2', 'mb-2', 'dark:bg-gray-800', 'dark:text-white', 'dark:border-gray-600', 'dark:hover:bg-gray-700', 'dark:hover:border-gray-600', 'dark:focus:ring-gray-700');
+    let tbody = document.querySelector('tbody');
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    let rows = '';
 
-
-          button.addEventListener('click',async (e)=>{
-               e.preventDefault();
-            let response=await fetch(`http://127.0.0.1:8000/products/${d.id}`,{
-                method:"DELETE",
-                headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'X-CSRF-TOKEN': csrfToken,
-      },
-               })  
-               
-               let deleteData=await response.json();
-           
-            let successmessage=document.querySelector('.successmessage')
-            successmessage.textContent=`${deleteData.message}`
-            successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
-            tr.remove();
-           
-           
-            
-          })
-         
-            
-          editBtn.addEventListener('click', (e)=>{
-            e.preventDefault();
-            window.location.href=`http://127.0.0.1:8000/products/${d.id}/edit`
-            
-            })
-           
-            
-            
-         tr.appendChild(td)
-         tr.appendChild(td2)
-         tr.appendChild(td3)
-         tr.appendChild(button)
-         tr.appendChild(editBtn)
-         tbody.appendChild(tr)
-
+    data.forEach(d => {
+        rows += `
+            <tr>
+                <td class="px-6 py-4">${d.id}</td>
+                <td class="px-6 py-4">${d.title}</td>
+                <td class="px-6 py-4">${d.description}</td>
+                <td>
+                    <button class="dlt-button focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" data-id="${d.id}">Delete</button>
+                    <button class="edit-btn text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" data-id="${d.id}">Edit</button>
+                </td>
+            </tr>
+        `;
     });
-    
+
+    tbody.innerHTML = rows;
+
+    document.querySelectorAll('.dlt-button').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = button.getAttribute('data-id');
+            let response = await fetch(`http://127.0.0.1:8000/products/${id}`, {
+                method: "DELETE",
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+            });
+
+            let deleteData = await response.json();
+            let successmessage = document.querySelector('.successmessage');
+            successmessage.textContent = `${deleteData.message}`;
+            successmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-green-50', 'dark:bg-gray-800', 'dark:text-green-400');
+
+            button.closest('tr').remove();
+        });
+    });
+
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const id = button.getAttribute('data-id');
+            window.location.href = `http://127.0.0.1:8000/products/${id}/edit`;
+        });
+    });
 }
+
+
+
+    
 fetchallProducts();
  
 
