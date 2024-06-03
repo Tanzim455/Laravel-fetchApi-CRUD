@@ -106,69 +106,7 @@
 
 
    });
-//         const form = document.querySelector('.form');
-//     const title = document.querySelector('.title');
-//     const description = document.querySelector('.description');
-//     const price=document.querySelector('.price');
-//     const id=document.querySelector('.hiddenid');
-//     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-//     const successmessage = document.querySelector('.successmessage');
-//     const errortitlemessage = document.querySelector('.errortitlemessage');
-//     const errordescriptionmessage = document.querySelector('.errordescriptionmessage');
-//     const errorpricemessage=document.querySelector('.errorpricemessage');
-//         form.addEventListener('submit',async(e)=>{
-//              e.preventDefault();
-             
-//            const response=await  fetch(`http://127.0.0.1:8000/products/${id.value}`, {
-//    method: 'PUT',
-//    body: JSON.stringify({
-//      id:id.value,
-//      title:title.value,
-//      description:description.value,
-//      price:price.value
-//    }),
-//    headers: {
-//          'Content-type': 'application/json; charset=UTF-8',
-//          'X-CSRF-TOKEN': csrfToken,
-//        },
-//  })
-//  const json=await response.json();
-  
-   
-//     if(json.status===400){
-//         if(json.errors.title){
-//         errortitlemessage.textContent=`${json.errors.title[1]}`
-//         errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-//       }
-//       if(json.errors.description){
-//         errordescriptionmessage.textContent=`${json.errors.description[1]}`
-//         errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-       
-//       }
-//       if(json.errors.price){
-//         errorpricemessage.textContent=`${json.errors.price[0]}`
-//         errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400')
-       
-//       }
-//         if(json.errors.title && json.errors.description && json.errors.price){
-          
-//         errortitlemessage.textContent=`${json.errors.title[1]}`;
-//         errordescriptionmessage.textContent=`${json.errors.description[1]}`;
-//         errorpricemessage.textContent=`${json.errors.price[0]}`;
-//         errortitlemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
-//         errordescriptionmessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
-//         errorpricemessage.classList.add('p-4', 'mb-4', 'text-sm', 'text-green-800', 'rounded-lg', 'bg-red-50', 'dark:bg-red-800', 'dark:text-red-400');
 
-//       }
-//     }
-    
-//     if(json.status===200){
-//       successmessage.textContent=`${json.message}`;
-//       successmessage.classList.add('p-4','mb-4','text-sm','text-green-800','rounded-lg','bg-green-50','dark:bg-gray-800', 'dark:text-green-400')
-     
-//     };
-   
-//          });
          
 //      </script>
 </form>
