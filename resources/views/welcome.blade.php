@@ -16,10 +16,10 @@
     
         
         
-        <div class="xl:flex xl:flex-row space-x-2 sm:flex sm:flex-col">
+        <div class="xl:flex xl:flex-row   space-x-2 sm:flex sm:flex-col md:flex md:flex-row">
             @foreach ($products as $product)
            
-            <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div class="xl:w-1/5 sm:w-1/6 md:w-1/3 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <a href="#">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{$product->title}}</h5>
                 </a>
@@ -112,7 +112,17 @@
                                 </div>
                             </div>
                         </li>
-                    </ul>`;
+                    </ul>
+                    <div class="space-y-1 text-right">
+                <p>Total amount:
+                    <span class="font-semibold">Quantity-<span class="totalquantity">${c.quantity}</span> * Price-<span class="perstockprice">${c.price}</span>=<span class="totalprice">${c.quantity * c.price}</span></span>
+
+                </p>
+                <p class="text-sm dark:text-gray-600">Not including taxes and shipping costs</p>
+            </div>
+                    
+                    
+                    `;
                 
        });
       let deleteButtons=document.querySelectorAll('.delete-button');
