@@ -53,8 +53,7 @@
                         cartItems.empty();
         
                         let cartmessage = $('.cartmessage');
-        
-                        allCarts.forEach(c => {
+                      allCarts.forEach(c => {
                             cartItems.append(`
                                 <ul class="flex flex-col divide-y dark:divide-gray-300">
                                     <li class="flex flex-col py-6 sm:flex-row sm:justify-between">
