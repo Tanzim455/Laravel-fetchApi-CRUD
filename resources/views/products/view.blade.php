@@ -12,81 +12,62 @@
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
                 <tr>
+                    <th class="py-2 px-4 border-b">Id</th>
                     <th class="py-2 px-4 border-b">Title</th>
                     <th class="py-2 px-4 border-b">Description</th>
                     <th class="py-2 px-4 border-b">Price</th>
-               
                 </tr>
             </thead>
             <tbody class="tbody">
-               
-                    
             </tbody>
-           
         </table>
-        <div class="pagination-links"></div>
+        <div class="pagination-links mt-4"></div>
     </div>
     <script>
-        let product_tbody=document.querySelector('.tbody');
-        let pagination_links=document.querySelector('.pagination-links');
-        async function fetchallProducts() {
-    let products = await fetch('http://127.0.0.1:8000/productsJson');
-    let productsJson = await products.json();
-      console.log(productsJson.data);
-      console.log(productsJson.links);
-      product_tbody.innerHTML='';
-    productsJson.data.forEach(product => {
-        console.log(product.title);
-        
-        product_tbody.innerHTML+=`
-        <tr>
-        <td>${product.title}</td>
-        <td>${product.description}</td>
-        <td>${product.price}</td>
-        </tr>
-        `
-    });
-        }
-      
-        async function fetchPaginatedProducts() {
-            let products = await fetch('http://127.0.0.1:8000/productsJson');
-    let productsJsonPaginate = await products.json();
-    pagination_links.innerHTML='';
-    productsJsonPaginate.links.forEach(link=>{
-        pagination_links.innerHTML+=
-        `<a href="${link.url}" class="pagination-anchors cursor-pointer text-blue-500 hover:text-blue-700 font-bold py-2 px-4">${link.label}</a>`
-    });
-        let pagination_anchors=document.querySelectorAll('.pagination-anchors');
+        let product_tbody = document.querySelector('.tbody');
+        let pagination_links = document.querySelector('.pagination-links');
 
-        pagination_anchors.forEach(a=>{
-            a.addEventListener('click',function(e){
+        async function fetchProducts(url) {
+            let response = await fetch(url);
+            let data = await response.json();
+            return data;
+        }
+
+        async function displayProducts(url) {
+            let productsJson = await fetchProducts(url);
+            product_tbody.innerHTML = ''; // Clear previous content
+            productsJson.data.forEach(product => {
+                product_tbody.innerHTML += `
+                <tr>
+                    <td class="py-2 px-4 border-b">${product.id}</td>
+                    <td class="py-2 px-4 border-b">${product.title}</td>
+                    <td class="py-2 px-4 border-b">${product.description}</td>
+                    <td class="py-2 px-4 border-b">${product.price}</td>
+                </tr>
+                `;
+            });
+            displayPagination(productsJson.links);
+        }
+
+        function displayPagination(links) {
+            pagination_links.innerHTML = ''; // Clear previous links
+            links.forEach(link => {
+                pagination_links.innerHTML += `
+                <a href="${link.url}" class="pagination-anchors cursor-pointer text-blue-500 hover:text-blue-700 font-bold py-2 px-4">${link.label}</a>
+                `;
+            });
+        }
+
+        pagination_links.addEventListener('click', function(e) {
+            if (e.target.classList.contains('pagination-anchors')) {
                 e.preventDefault();
-                 console.log("Anchor clicked");
-                 const linkAttribute=a.getAttribute('href');
-                 async function pagninatedroduct(){
-                    let paginated_product = await fetch(`${linkAttribute}`)
-                   let paginatedJson=await paginated_product.json();
-                   paginatedJson.data.forEach(product => {
-        console.log(product.title);
-        
-        product_tbody.innerHTML=`
-        <tr>
-        <td>${product.title}</td>
-        <td>${product.description}</td>
-        <td>${product.price}</td>
-        </tr>
-        `
-    });
-                   
-                 }
+                let url = e.target.getAttribute('href');
+                displayProducts(url);
+            }
+        });
 
-                 pagninatedroduct();
-                 
-            })
-        })
-        }
-        fetchallProducts();
-        fetchPaginatedProducts();
+        // Initial fetch
+        displayProducts('http://127.0.0.1:8000/productsJson');
     </script>
 </body>
 </html>
