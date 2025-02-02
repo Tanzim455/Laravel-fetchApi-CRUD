@@ -25,7 +25,9 @@ class ProductRequest extends FormRequest
             //
             'title'=>'string|required',
              'description'=>'string|required',
-             'price'=>'required'
+             'price'=>'required',
+             'image'=>'required'
+             
         ];
     }
     public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)

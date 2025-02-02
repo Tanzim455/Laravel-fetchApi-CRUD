@@ -17,10 +17,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/',[ProductController::class,'allproducts']);
   Route::resource('products',ProductController::class);
+  Route::get('productsJson',[ProductController::class,'productsAllJson']);
   Route::post('products/store',[ProductController::class,'store'])->name('productsstore');
  Route::get('viewall',function(){
      return view('products.viewall');
  });
+  Route::get('viewproducts',function(){
+     return view('products.view');
+  });
   Route::get('/carts',[CartController::class,'index']);
     Route::post('addTo/Cart',[CartController::class,'addToCart'])->name('addToCart');
     Route::delete('cart/{id}',[CartController::class,'deleteCart'])->name('singlecart');

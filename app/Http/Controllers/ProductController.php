@@ -18,8 +18,13 @@ class ProductController extends Controller
     public function allproducts():View{
         $carts=Cart::join('products','carts.product_id','products.id')->get();
         
-        $products=Product::select('id','title','description','price')->get();
+        $products=Product::select('id','title','description','price')->paginate(10);
         return view('welcome',compact('products','carts'));
+    }
+    public function productsAllJson(){
+       $products=Product::select('id','title','description','price')->paginate(10);
+
+       return response()->json($products);
     }
     public function index():JsonResponse
     {
@@ -44,8 +49,33 @@ class ProductController extends Controller
     public function store(ProductRequest $request):JsonResponse
     {
         //
-      $product=Product::create($request->validated());
-         
+        $product=new Product();
+        $product->title=$request->input('title');
+        $product->description=$request->input('description');
+        $product->price=$request->input('price');
+        if($request->hasFile('image')){
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('image')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+    
+        $request->file('image')->storeAs('public/product_images',$fileNameToStore);
+    
+    
+    
+    
+                 $product->image = $fileNameToStore;
+                 $product->save();
+    
+            
+    
+           }
+        // $product->save();
+    //   $product=Product::create($request->validated());
+     
       return response()->json([
         'status' => 200,
         'message' => 'Product created successfully!',
