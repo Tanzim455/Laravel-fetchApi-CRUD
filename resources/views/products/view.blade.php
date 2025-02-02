@@ -34,10 +34,10 @@
     let productsJson = await products.json();
       console.log(productsJson.data);
       console.log(productsJson.links);
-      
+      product_tbody.innerHTML='';
     productsJson.data.forEach(product => {
         console.log(product.title);
-        product_tbody.innerHTML='';
+        
         product_tbody.innerHTML+=`
         <tr>
         <td>${product.title}</td>
@@ -69,7 +69,7 @@
                    paginatedJson.data.forEach(product => {
         console.log(product.title);
         
-        product_tbody.innerHTML+=`
+        product_tbody.innerHTML=`
         <tr>
         <td>${product.title}</td>
         <td>${product.description}</td>
